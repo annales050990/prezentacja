@@ -1,10 +1,15 @@
 import { create } from 'zustand'
+import { persist } from 'zustand/middleware' // Ta linia jest kluczowa!
 
-// To jest nasz globalny "magazyn" danych
-export const useStore = create((set) => ({
-  bears: 0,
-  // Akcja: dodawanie
-  increasePopulation: () => set((state) => ({ bears: state.bears + 1 })),
-  // Akcja: resetowanie
-  removeAllBears: () => set({ bears: 0 }),
-}))
+export const useStore = create(
+  persist(
+    (set) => ({
+      bears: 0,
+      increasePopulation: () => set((state) => ({ bears: state.bears + 1 })),
+      removeAllBears: () => set({ bears: 0 }),
+    }),
+    {
+      name: 'bear-storage', // Unikalna nazwa klucza w LocalStorage
+    }
+  )
+)
